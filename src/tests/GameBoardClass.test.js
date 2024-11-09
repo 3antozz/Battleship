@@ -7,6 +7,7 @@ board.placeShip(Hship, 2, 3, 'horizontal');
 board.placeShip(Vship, 7, 7, 'vertical');
 
 
+
 test ('test horizontal ship placement', () => {
     expect(board.grid[2][3].shipCell).toBeTruthy();
     expect(board.grid[2][4].shipCell).toBeTruthy();
@@ -21,5 +22,10 @@ test ('test vertical ship placement', () => {
     expect(board.grid[5][7].shipCell).toBeTruthy();
     expect(board.grid[4][7].shipCell).toBeFalsy();
     expect(board.grid[5][7].shipName).toBe('Koko');
+})
+
+test ('Off grid ship placement', () => {
+    expect(board.placeShip(Vship, -1, 11, 'vertical')).toBe('INSIDE THE GRID PLZ');
+    expect(board.placeShip(Vship, 1, 1, 'vertical')).toBe('INSIDE THE GRID PLZ');
 })
 

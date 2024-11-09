@@ -26,9 +26,11 @@ class GameBoard {
     }
 
     isValid(row, column) {
-        if (0 <= row <= 9 && 0 <= column <= 9) {
+        if (row >= 0 && row <= 9 && column >= 0 && column <= 9) {
             return true;
-        } else false;
+        } else {
+            return false;
+        }
     }
 
     placeShip(ship, row, column, direction) {
