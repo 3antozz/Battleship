@@ -9,6 +9,9 @@
     "build": "webpack --config webpack.prod.js",
     "deploy": "git add dist -f && git commit && git subtree push --prefix dist origin gh-pages"
   },
+  "jest": {
+    "testMatch": ["**/tests/**/*.test.js"]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
