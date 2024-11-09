@@ -2,14 +2,15 @@ class Cell {
     constructor(row, column) {
         this.row = row;
         this.column = column;
-        this.shipCell = false;
-        this.hitMark = false;
+        this.isShipCell = false;
+        this.isHit = false;
     }
 }
 
 class GameBoard {
     constructor () {
         this.grid = this.createGrid();
+        this.ships = [];
     }
 
     createGrid () {
@@ -42,8 +43,8 @@ class GameBoard {
                 return 'INSIDE THE GRID PLZ';
             }
             for (let i=0; i < ship.length; i++) {
-                this.grid[row][column].shipCell = true;
-                this.grid[row][column].shipName = ship.name;
+                this.grid[row][column].isShipCell = true;
+                this.grid[row][column].ship = ship;
                 column++;
             }
         }
@@ -52,14 +53,39 @@ class GameBoard {
                 return 'INSIDE THE GRID PLZ';
             }
             for (let i=0; i < ship.length; i++) {
-                this.grid[row][column].shipCell = true;
-                this.grid[row][column].shipName = ship.name;
+                this.grid[row][column].isShipCell = true;
+                this.grid[row][column].ship = ship;
                 row--;
             }
         }
+        this.ships.push(ship);
+    }
 
-
-
+    receiveAttack(row, column) {
+        if(!this.isValid(row, column)) {
+            return 'INSIDE THE GRID PLZ';
+        }
+        const cell = this.grid[row][column];
+        if (!cell.isHit) {
+            cell.isHit = true;
+            if (cell.isShipCell) {
+                cell.ship.hit();
+            }
+        }
+    }
+    shipsSinkCheck () {
+        for (let ship of this.ships) {
+            if (ship.isSunk()) {
+                return true;
+            }
+            return false;
+        }
+    }
+    isAllShipsSunk () {
+        if (this.shipsSinkCheck()) {
+            return true;
+        }
+        return false;
     }
 }
 
