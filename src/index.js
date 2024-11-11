@@ -29,7 +29,7 @@ function attackEventListener (gameControl) {
                 gameControl.switchTurn();
                 clearGrid(leftBoard);
                 renderGrid(gameControl.playerOne.board.grid);
-            }, 1000);
+            }, 600);
         } else {
             return;
         }

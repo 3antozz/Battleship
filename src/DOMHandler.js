@@ -11,7 +11,8 @@ function renderCell(cell) {
     button.dataset.row = cell.row;
     button.dataset.column = cell.column;
     button.dataset.player = cell.player;
-    if (cell.isShipCell && cell.player === 'player') {
+    // button.dataset.ship = cell.ship.name;
+    if (cell.isShipCell) {
         button.classList.add('unhit-ship');
     }
     if (cell.isHit) {
