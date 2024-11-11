@@ -27,8 +27,8 @@ describe ('Ship Placement Method', () => {
     })
     
     test ('Off grid ship placement', () => {
-        expect(board.placeShip(Vship, -1, 11, 'vertical')).toBe('INSIDE THE GRID PLZ');
-        expect(board.placeShip(Vship, 1, 1, 'vertical')).toBe('INSIDE THE GRID PLZ');
+        expect(board.placeShip(Vship, -1, 11, 'vertical')).toBeFalsy();
+        expect(board.placeShip(Vship, 1, 1, 'vertical')).toBeFalsy();
     })
 
     test ('ships array updated', () => {
@@ -46,7 +46,11 @@ describe ('Attack test', () => {
     })
 
     test('test off grid shot', () => {
-        expect(board.receiveAttack(10, 10)).toBe('INSIDE THE GRID PLZ');
+        expect(board.receiveAttack(10, 10)).toBeFalsy();
+    })
+
+    test ('already hit cell', () => {
+        expect(board.receiveAttack(7, 7)).toBeFalsy();
     })
 
     test('if ship is sunk', () => {
@@ -72,7 +76,15 @@ describe('win condition test', () => {
     })
 
     test('not all ships sunk', () => {
-        const board2 = new GameBoard()
+        const board2 = new GameBoard();
+        const Hship = new Ship('Warrior', 3);
+        const Vship = new Ship('Koko', 3);
+        board2.placeShip(Hship, 2, 3, 'horizontal');
+        board2.placeShip(Vship, 7, 7, 'vertical');
+        board2.receiveAttack(7, 7);
+        board2.receiveAttack(6, 7);
+        board2.receiveAttack(5, 7);
+        board2.receiveAttack(4, 7);
         expect(board2.isAllShipsSunk()).toBeFalsy();
     })
 })

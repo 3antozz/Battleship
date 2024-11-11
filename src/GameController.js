@@ -21,6 +21,26 @@ class GameController {
         this.playerTwo.board.placeShip(new Ship('Submarine', 3), 3, 7, 'horizontal');
         this.playerTwo.board.placeShip(new Ship('Patrol', 2), 7, 9, 'vertical');
     }
+
+    switchTurn() {
+        if (this.currentPlayer === this.playerOne) {
+            this.currentPlayer = this.playerTwo;
+        } else {
+            this.currentPlayer = this.playerOne;
+        }
+    }
+
+    gameOver () {
+        return this.playerOne.board.isAllShipsSunk() || this.playerTwo.board.isAllShipsSunk();
+    }
+
+    computerTurn () {
+        let [row, column] = this.playerTwo.computerShot();
+        while (!this.playerOne.board.isValid(row, column)) {
+            [row, column] = this.playerTwo.computerShot()
+        }
+        this.playerOne.board.receiveAttack(row, column);
+    }
 }
 
 

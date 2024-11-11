@@ -29,20 +29,20 @@ class GameBoard {
     }
 
     isValid(row, column) {
-        if (row >= 0 && row <= 9 && column >= 0 && column <= 9) {
+        if (row >= 0 && row <= 9 && column >= 0 && column <= 9 && !this.grid[row][column].isHit) {
             return true;
-        } else {
+        }  else {
             return false;
         }
     }
 
     placeShip(ship, row, column, direction) {
         if (!this.isValid(row, column)) {
-            return "INSIDE THE GRID PLZ";
+            return false;
         }
         if (direction === "horizontal") {
             if (!this.isValid(row, column + ship.length-1)) {
-                return "INSIDE THE GRID PLZ";
+                return false;
             }
             for (let i = 0; i < ship.length; i++) {
                 this.grid[row][column].isShipCell = true;
@@ -52,7 +52,7 @@ class GameBoard {
         }
         if (direction === "vertical") {
             if (!this.isValid(row - ship.length-1, column)) {
-                return "INSIDE THE GRID PLZ";
+                return false;
             }
             for (let i = 0; i < ship.length; i++) {
                 this.grid[row][column].isShipCell = true;
@@ -65,7 +65,7 @@ class GameBoard {
 
     receiveAttack(row, column) {
         if (!this.isValid(row, column)) {
-            return "INSIDE THE GRID PLZ";
+            return false;
         }
         const cell = this.grid[row][column];
         if (!cell.isHit) {
@@ -77,11 +77,11 @@ class GameBoard {
     }
     shipsSinkCheck() {
         for (let ship of this.ships) {
-            if (ship.isSunk()) {
-                return true;
+            if (!ship.isSunk()) {
+                return false;
             }
-            return false;
         }
+        return true;
     }
     isAllShipsSunk() {
         if (this.shipsSinkCheck()) {

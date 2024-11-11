@@ -11,8 +11,16 @@ function renderCell(cell) {
     button.dataset.row = cell.row;
     button.dataset.column = cell.column;
     button.dataset.player = cell.player;
-    if (cell.isShipCell) {
+    if (cell.isShipCell && cell.player === 'player') {
         button.classList.add('unhit-ship');
+    }
+    if (cell.isHit) {
+        button.classList.add('hit-cell');
+        if (cell.isShipCell) {
+            button.classList.remove('hit-cell');
+            button.classList.remove('unhit-ship');
+            button.classList.add('hit-ship');
+        }
     }
 
     if (cell.player === "player") {
@@ -24,4 +32,8 @@ function renderCell(cell) {
     }
 }
 
-export { renderGrid };
+function clearGrid (gridDom) {
+    gridDom.textContent = "";
+}
+
+export { renderGrid, clearGrid };

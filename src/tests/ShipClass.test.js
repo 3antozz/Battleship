@@ -17,3 +17,12 @@ test('Test ship is sunk method', () => {
     ship.hit();
     expect(ship.isSunk()).toBeTruthy();
 })
+
+test ('Ship is not sunk', () => {
+    const ship = new Ship('Carrier', 5);
+    ship.hit();
+    ship.hit();
+    ship.hit();
+    ship.hit();
+    expect(ship.isSunk()).toBeFalsy();
+})
