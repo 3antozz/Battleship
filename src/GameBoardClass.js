@@ -147,6 +147,9 @@ class GameBoard {
             cell.isHit = true;
             if (cell.isShipCell) {
                 cell.ship.hit();
+                if(cell.ship.isSunk()) {
+                    return 'Ship has Sunk!'
+                }
                 return 'Hit!';
             }
         }

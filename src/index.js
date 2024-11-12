@@ -1,17 +1,18 @@
 import "./styles.css";
-import {renderGrid, clearGrid, renderShotStatus} from "./DOMHandler";
+const DOMHandler = require('./DOMHandler')
 const GameController = require('./GameController');
 console.log("TEST");
 
 (function init () {
     const gameControl = new GameController();
+    const DOM = DOMHandler();
     gameControl.startGame();
-    renderGrid(gameControl.playerOne.board.grid);
-    renderGrid(gameControl.playerTwo.board.grid);
-    attackEventListener(gameControl);
+    DOM.renderGrid(gameControl.playerOne.board.grid);
+    DOM.renderGrid(gameControl.playerTwo.board.grid);
+    attackEventListener(gameControl, DOM);
 })()
 
-function attackEventListener (gameControl) {
+function attackEventListener (gameControl, DOM) {
     const rightBoard = document.querySelector('.right-player');
     const leftBoard = document.querySelector('.left-player');
     rightBoard.addEventListener('click', (event) => {
@@ -22,15 +23,15 @@ function attackEventListener (gameControl) {
                 return;
             }
             gameControl.switchTurn();
-            renderShotStatus(playerTurn);
-            clearGrid(rightBoard);
-            renderGrid(gameControl.playerTwo.board.grid);
+            DOM.renderShotStatus(playerTurn);
+            DOM.clearGrid(rightBoard);
+            DOM.renderGrid(gameControl.playerTwo.board.grid);
             if (!gameControl.gameOver()) {
                 setTimeout(() => {
                     const computerTurn = gameControl.computerTurn();
-                    renderShotStatus(computerTurn);
-                    clearGrid(leftBoard);
-                    renderGrid(gameControl.playerOne.board.grid);
+                    DOM.renderShotStatus(computerTurn);
+                    DOM.clearGrid(leftBoard);
+                    DOM.renderGrid(gameControl.playerOne.board.grid);
                 }, 600);
                 gameControl.switchTurn();
             } else {

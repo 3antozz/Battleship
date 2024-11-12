@@ -77,14 +77,14 @@ class GameController {
                         this.cpuQueue.push(coords);
                     })
                 }
-                this.playerOne.board.receiveAttack(row, column);
-                if (this.playerOne.board.grid[row][column].ship.isSunk()) {
+                const result = this.playerOne.board.receiveAttack(row, column);
+                if (result === 'Ship has Sunk!') {
                     this.firstHit = null;
                     this.direction = false;
                     this.cpuQueue.length = 0;
-                    return 'Sunk Ship!';
+                    return result;
                 }
-                return 'Hit!'
+                return result;
             } else {
                 return this.playerOne.board.receiveAttack(row, column);
             }
