@@ -11,9 +11,9 @@ function renderCell(cell) {
     button.dataset.row = cell.row;
     button.dataset.column = cell.column;
     button.dataset.player = cell.player;
-    // button.dataset.ship = cell.ship.name;
     if (cell.isShipCell) {
         button.classList.add('unhit-ship');
+        button.dataset.ship = cell.ship.name;
     }
     if (cell.isHit) {
         button.classList.add('hit-cell');
@@ -37,4 +37,10 @@ function clearGrid (gridDom) {
     gridDom.textContent = "";
 }
 
-export { renderGrid, clearGrid };
+function renderShotStatus (message) {
+    const p = document.querySelector(".hit");
+    p.textContent = message;
+
+}
+
+export { renderGrid, clearGrid, renderShotStatus };

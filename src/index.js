@@ -1,5 +1,5 @@
 import "./styles.css";
-import {renderGrid, clearGrid} from "./DOMHandler";
+import {renderGrid, clearGrid, renderShotStatus} from "./DOMHandler";
 const GameController = require('./GameController');
 console.log("TEST");
 
@@ -21,15 +21,17 @@ function attackEventListener (gameControl) {
             if (playerTurn === false) {
                 return;
             }
+            gameControl.switchTurn();
+            renderShotStatus(playerTurn);
             clearGrid(rightBoard);
             renderGrid(gameControl.playerTwo.board.grid);
-            gameControl.switchTurn();
             setTimeout(() => {
-                gameControl.computerTurn(gameControl);
-                gameControl.switchTurn();
+                const computerTurn = gameControl.computerTurn();
+                renderShotStatus(computerTurn);
                 clearGrid(leftBoard);
                 renderGrid(gameControl.playerOne.board.grid);
             }, 600);
+            gameControl.switchTurn();
         } else {
             return;
         }

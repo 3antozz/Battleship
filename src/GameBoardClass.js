@@ -5,18 +5,17 @@ class Cell {
         this.player = player;
         this.isShipCell = false;
         this.isHit = false;
-        this.adjacentCells = this.getAdjacentCells(row, column);
     }
 
-    getAdjacentCells(row, column) {
-        const directions = [[0, 1], [0, -1], [1, 0], [1, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
-        .map((coords) => [row + coords[0], column + coords[1]])
+    getAdjacentCells() {
+        const directions = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+        .map((coords) => [this.row + coords[0], this.column + coords[1]])
         .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
     isInGrid(row, column) {
-        if (row >= 0 && row <= 9 && column >= 0 && column <= 9) {
+        if (row >= 0 && row <= 9 && column >= 0 && column <= 9 && !this.isHit) {
             return true;
         }  else {
             return false;
@@ -47,7 +46,8 @@ class GameBoard {
 
     hasAdjacentShipCells(row, column, shipName) {
         const cell = this.grid[row][column];
-        for (let adjCell of cell.adjacentCells) {
+        const adjacentCells = cell.getAdjacentCells();
+        for (let adjCell of adjacentCells ) {
             const adjacentCell = this.grid[adjCell[0]][adjCell[1]];
             if (adjacentCell.isShipCell && adjacentCell.ship.name != shipName) {
                     return true;
@@ -117,6 +117,7 @@ class GameBoard {
 
     receiveAttack(row, column) {
         if (!this.isInGrid(row, column)) {
+            console.log(row, column);
             return false;
         }
         const cell = this.grid[row][column];
@@ -124,8 +125,10 @@ class GameBoard {
             cell.isHit = true;
             if (cell.isShipCell) {
                 cell.ship.hit();
+                return 'Hit!';
             }
         }
+        return 'Miss!';
     }
     shipsSinkCheck() {
         for (let ship of this.ships) {

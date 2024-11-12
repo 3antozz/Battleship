@@ -75,6 +75,7 @@ footer p {
 }
 
 main {
+  position: relative;
   align-items: center;
   flex: 1;
   display: flex;
@@ -92,6 +93,11 @@ main {
 
 .hit-cell {
   background-color: rgba(0, 0, 255, 0.559);
+}
+
+main p {
+  font-size: 3vw;
+  position: absolute;
 }
 
 
