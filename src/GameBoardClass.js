@@ -117,7 +117,6 @@ class GameBoard {
 
     receiveAttack(row, column) {
         if (!this.isInGrid(row, column)) {
-            console.log(row, column);
             return false;
         }
         const cell = this.grid[row][column];

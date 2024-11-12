@@ -32,7 +32,6 @@ class GameController {
     }
 
     computerTurn () {
-        console.log(this.cpuQueue);
         if (this.cpuQueue.length === 0) {
             let row = Math.floor(Math.random() * 10);
             let column = Math.floor(Math.random() * 10);
@@ -60,6 +59,7 @@ class GameController {
                     this.cpuQueue.length = 0;
                     return 'Sunk Ship!';
                 }
+                return 'Hit!'
             } else {
                 return this.playerOne.board.receiveAttack(row, column);
             }
