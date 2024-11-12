@@ -25,13 +25,17 @@ function attackEventListener (gameControl) {
             renderShotStatus(playerTurn);
             clearGrid(rightBoard);
             renderGrid(gameControl.playerTwo.board.grid);
-            setTimeout(() => {
-                const computerTurn = gameControl.computerTurn();
-                renderShotStatus(computerTurn);
-                clearGrid(leftBoard);
-                renderGrid(gameControl.playerOne.board.grid);
-            }, 600);
-            gameControl.switchTurn();
+            if (!gameControl.gameOver()) {
+                setTimeout(() => {
+                    const computerTurn = gameControl.computerTurn();
+                    renderShotStatus(computerTurn);
+                    clearGrid(leftBoard);
+                    renderGrid(gameControl.playerOne.board.grid);
+                }, 600);
+                gameControl.switchTurn();
+            } else {
+                return;
+            }
         } else {
             return;
         }

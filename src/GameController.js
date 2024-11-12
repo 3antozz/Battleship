@@ -7,6 +7,8 @@ class GameController {
         this.playerTwo = new Player('computer');
         this.currentPlayer = this.playerOne;
         this.cpuQueue = [];
+        this.firstHit = null;
+        this.direction = false;
     }
 
     startGame() {
@@ -40,7 +42,8 @@ class GameController {
                 column = Math.floor(Math.random() * 10);
             }
             if (this.playerOne.board.grid[row][column].isShipCell){
-                this.playerOne.board.grid[row][column].getAdjacentCells().forEach((coords) => {
+                this.firstHit = [row, column];
+                this.playerOne.board.grid[row][column].getOrthogonalCells().forEach((coords) => {
                     this.cpuQueue.push(coords);
                 })
             }
@@ -51,11 +54,33 @@ class GameController {
                 return this.computerTurn();
             }
             if (this.playerOne.board.grid[row][column].isShipCell){
-                this.playerOne.board.grid[row][column].getAdjacentCells().forEach((coords) => {
+                if (row === this.firstHit[0]) {
+                    if (!this.direction) {
+                        this.cpuQueue.length = 0;
+                        this.direction = true;
+                        this.playerOne.board.grid[this.firstHit[0]][this.firstHit[1]].getHorizontalCells().forEach((coords) => {
+                        this.cpuQueue.push(coords);
+                        })
+                    }
+                    this.playerOne.board.grid[row][column].getHorizontalCells().forEach((coords) => {
                     this.cpuQueue.push(coords);
-                })
+                    })
+                } else if (column === this.firstHit[1]) {
+                    if (!this.direction) {
+                        this.cpuQueue.length = 0;
+                        this.direction = true;
+                        this.playerOne.board.grid[this.firstHit[0]][this.firstHit[1]].getVerticalCells().forEach((coords) => {
+                        this.cpuQueue.push(coords);
+                        })
+                    }
+                    this.playerOne.board.grid[row][column].getVerticalCells().forEach((coords) => {
+                        this.cpuQueue.push(coords);
+                    })
+                }
                 this.playerOne.board.receiveAttack(row, column);
                 if (this.playerOne.board.grid[row][column].ship.isSunk()) {
+                    this.firstHit = null;
+                    this.direction = false;
                     this.cpuQueue.length = 0;
                     return 'Sunk Ship!';
                 }

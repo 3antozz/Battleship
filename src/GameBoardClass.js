@@ -7,15 +7,38 @@ class Cell {
         this.isHit = false;
     }
 
+    getOrthogonalCells() {
+        const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+        .map((coords) => [this.row + coords[0], this.column + coords[1]])
+        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        return directions;
+    }
+
     getAdjacentCells() {
-        const directions = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+        const directions = [[0, 1], [1, 0],[0, -1], [1, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
+        .map((coords) => [this.row + coords[0], this.column + coords[1]])
+        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        return directions;
+    }
+
+    
+
+    getVerticalCells() {
+        const directions = [[1, 0], [-1, 0]]
+        .map((coords) => [this.row + coords[0], this.column + coords[1]])
+        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        return directions;
+    }
+
+    getHorizontalCells() {
+        const directions = [[0, 1], [0, -1]]
         .map((coords) => [this.row + coords[0], this.column + coords[1]])
         .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
     isInGrid(row, column) {
-        if (row >= 0 && row <= 9 && column >= 0 && column <= 9 && !this.isHit) {
+        if (row >= 0 && row <= 9 && column >= 0 && column <= 9) {
             return true;
         }  else {
             return false;
@@ -144,6 +167,7 @@ class GameBoard {
         return false;
     }
 }
+
 
 
 
