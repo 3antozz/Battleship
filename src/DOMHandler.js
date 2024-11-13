@@ -1,6 +1,7 @@
 class DOMHandler {
     constructor() {
         this.highlightedCells = [];
+        this.redCells = [];
     }
     renderGrid(grid) {
         if (grid[0][0].player === "player") {
@@ -59,6 +60,9 @@ class DOMHandler {
         if (this.highlightedCells.length > 0) {
             this.unhighlightPreviousCells();
         }
+        if (this.redCells.length > 0) {
+            this.unhighlightRedCells();
+        }
         this.highlightedCells.push(DOMCell);
         DOMCell.classList.add("highlight-cell");
         if (direction === "horizontal") {
@@ -93,9 +97,49 @@ class DOMHandler {
         });
     }
 
-    badShipPlacement() {
+    unhighlightRedCells() {
+        this.redCells.forEach((cell) => {
+            cell.classList.remove("unallowed-cell");
+        });
+    }
+
+    badShipPlacement(DOMCell, length, direction) {
         if (this.highlightedCells.length > 0) {
             this.unhighlightPreviousCells();
+        }
+        if (this.redCells.length > 0) {
+            this.unhighlightRedCells();
+        }
+        this.redCells.push(DOMCell);
+        DOMCell.style.cursor = "not-allowed";
+        DOMCell.classList.add("unallowed-cell");
+        if (direction === "horizontal") {
+            let row = DOMCell.dataset.row;
+            let column = DOMCell.dataset.column;
+            for (let i = 1; i < length; i++) {
+                column++;
+                const cell = document.querySelector(
+                    `[data-player="player"][data-row="${row}"][data-column="${column}"]`,
+                );
+                if (cell && !cell.classList.contains("unhit-ship")) {
+                    cell.classList.add("unallowed-cell");
+                } else return;
+                this.redCells.push(cell);
+            }
+        }
+        if (direction === "vertical") {
+            let row = DOMCell.dataset.row;
+            let column = DOMCell.dataset.column;
+            for (let i = 1; i < length; i++) {
+                row--;
+                const cell = document.querySelector(
+                    `[data-player="player"][data-row="${row}"][data-column="${column}"]`,
+                );
+                if (cell && !cell.classList.contains("unhit-ship")) {
+                    cell.classList.add("unallowed-cell");
+                } else return;
+                this.redCells.push(cell);
+            }
         }
     }
 }

@@ -17,10 +17,10 @@ class GameController {
 
     createNewPlayer() {
         this.playerOne = new Player("player");
+        this.currentPlayer = this.playerOne;
     }
 
     startGame() {
-        this.randomizeShipsPlacement(this.playerOne.board);
         this.randomizeShipsPlacement(this.playerTwo.board);
     }
 
@@ -55,7 +55,7 @@ class GameController {
                         this.cpuQueue.push(coords);
                     });
             }
-            return this.currentPlayer.board.receiveAttack(row, column);
+            return this.playerOne.board.receiveAttack(row, column);
         } else {
             let [row, column] = this.cpuQueue.shift();
             if (this.playerOne.board.grid[row][column].isHit) {
@@ -137,6 +137,7 @@ class GameController {
             }
             board.placeShip(ship, row, column, direction);
         }
+        return true;
     }
 
     handleMouseOver(event) {
@@ -168,7 +169,7 @@ class GameController {
             this.DOM.highlightShip(event.target, ship.length, direction);
         } else {
             this.placementAllowed = false;
-            this.DOM.badShipPlacement();
+            this.DOM.badShipPlacement(event.target, ship.length, direction);
         }
     }
 
@@ -194,7 +195,7 @@ class GameController {
             this.DOM.renderGrid(this.playerOne.board.grid);
             this.currentShipIndex++;
         } else {
-            this.DOM.badShipPlacement();
+            return;
         }
     }
 

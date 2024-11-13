@@ -8,39 +8,57 @@ class Cell {
     }
 
     getOrthogonalCells() {
-        const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-        .map((coords) => [this.row + coords[0], this.column + coords[1]])
-        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        const directions = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ]
+            .map((coords) => [this.row + coords[0], this.column + coords[1]])
+            .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
     getAdjacentCells() {
-        const directions = [[0, 1], [1, 0],[0, -1], [1, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
-        .map((coords) => [this.row + coords[0], this.column + coords[1]])
-        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        const directions = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [1, -1],
+            [1, 1],
+            [-1, 1],
+            [1, -1],
+            [-1, -1],
+        ]
+            .map((coords) => [this.row + coords[0], this.column + coords[1]])
+            .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
-    
-
     getVerticalCells() {
-        const directions = [[1, 0], [-1, 0]]
-        .map((coords) => [this.row + coords[0], this.column + coords[1]])
-        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        const directions = [
+            [1, 0],
+            [-1, 0],
+        ]
+            .map((coords) => [this.row + coords[0], this.column + coords[1]])
+            .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
     getHorizontalCells() {
-        const directions = [[0, 1], [0, -1]]
-        .map((coords) => [this.row + coords[0], this.column + coords[1]])
-        .filter((coords) => this.isInGrid(coords[0], coords[1]));
+        const directions = [
+            [0, 1],
+            [0, -1],
+        ]
+            .map((coords) => [this.row + coords[0], this.column + coords[1]])
+            .filter((coords) => this.isInGrid(coords[0], coords[1]));
         return directions;
     }
 
     isInGrid(row, column) {
         if (row >= 0 && row <= 9 && column >= 0 && column <= 9) {
             return true;
-        }  else {
+        } else {
             return false;
         }
     }
@@ -66,38 +84,45 @@ class GameBoard {
         return grid;
     }
 
-
     hasAdjacentShipCells(row, column, shipName) {
         const cell = this.grid[row][column];
         const adjacentCells = cell.getAdjacentCells();
-        for (let adjCell of adjacentCells ) {
+        for (let adjCell of adjacentCells) {
             const adjacentCell = this.grid[adjCell[0]][adjCell[1]];
             if (adjacentCell.isShipCell && adjacentCell.ship.name != shipName) {
-                    return true;
+                return true;
             }
         }
         return false;
     }
 
-
-
     isInGrid(row, column) {
-        if (row >= 0 && row <= 9 && column >= 0 && column <= 9 && !this.grid[row][column].isHit) {
+        if (
+            row >= 0 &&
+            row <= 9 &&
+            column >= 0 &&
+            column <= 9 &&
+            !this.grid[row][column].isHit
+        ) {
             return true;
-        }  else {
+        } else {
             return false;
         }
     }
 
     isValid(row, column, shipName) {
-        if (this.isInGrid(row, column) && !this.grid[row][column].isShipCell && !this.hasAdjacentShipCells(row, column, shipName)) {
+        if (
+            this.isInGrid(row, column) &&
+            !this.grid[row][column].isShipCell &&
+            !this.hasAdjacentShipCells(row, column, shipName)
+        ) {
             return true;
-        }  else {
+        } else {
             return false;
         }
     }
 
-    CheckShipPlacement (ship, row, column, direction) {
+    CheckShipPlacement(ship, row, column, direction) {
         if (direction === "horizontal") {
             for (let i = 0; i < ship.length; i++) {
                 if (!this.isValid(row, column + i, ship.name)) {
@@ -112,9 +137,8 @@ class GameBoard {
                 }
             }
         }
-        return true;  
+        return true;
     }
-
 
     placeShip(ship, row, column, direction) {
         if (direction === "horizontal") {
@@ -144,13 +168,13 @@ class GameBoard {
             cell.isHit = true;
             if (cell.isShipCell) {
                 cell.ship.hit();
-                if(cell.ship.isSunk()) {
-                    return 'Ship has Sunk!'
+                if (cell.ship.isSunk()) {
+                    return "Ship has Sunk!";
                 }
-                return 'Hit!';
+                return "Hit!";
             }
         }
-        return 'Miss!';
+        return "Miss!";
     }
     shipsSinkCheck() {
         for (let ship of this.ships) {
@@ -167,8 +191,5 @@ class GameBoard {
         return false;
     }
 }
-
-
-
 
 module.exports = GameBoard;
