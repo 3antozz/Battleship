@@ -9,14 +9,14 @@ class GameController {
         this.cpuQueue = [];
         this.firstHit = null;
         this.direction = false;
+        this.DOMdirection = 'horizontal';
+    }
+
+    createNewPlayer () {
+        this.playerOne = new Player('player');
     }
 
     startGame() {
-        // this.playerOne.board.placeShip(new Ship('Carrier', 5), 7, 0, 'vertical');
-        // this.playerOne.board.placeShip(new Ship('Battleship', 4), 0, 0, 'horizontal');
-        // this.playerOne.board.placeShip(new Ship('Destroyer', 3), 5, 3, 'vertical');
-        // this.playerOne.board.placeShip(new Ship('Submarine', 3), 3, 7, 'horizontal');
-        // this.playerOne.board.placeShip(new Ship('Patrol', 2), 7, 9, 'vertical');
         this.randomizeShipsPlacement(this.playerOne.board);
         this.randomizeShipsPlacement(this.playerTwo.board);
     }
@@ -91,6 +91,10 @@ class GameController {
         }
     }
 
+    changeDOMDirection () {
+        this.DOMdirection = this.DOMdirection === 'horizontal' ? 'vertical' : 'horizontal';
+    }
+
     randomizeShipsPlacement (board) {
         const ships = [new Ship('Carrier', 5), new Ship('Battleship', 4), new Ship('Destroyer', 3), new Ship('Submarine', 3), new Ship('Patrol', 2) ];
         for (let ship of ships) {
@@ -98,10 +102,11 @@ class GameController {
             direction = direction === 1 ? 'vertical' : 'horizontal';
             let row = Math.floor(Math.random() * 10);
             let column = Math.floor(Math.random() * 10);
-            while (board.placeShip(ship, row, column, direction) === false) {
+            while (board.CheckShipPlacement(ship, row, column, direction) === false) {
                 row = Math.floor(Math.random() * 10);
                 column = Math.floor(Math.random() * 10);
             }
+            board.placeShip(ship, row, column, direction)
         }
         
     }

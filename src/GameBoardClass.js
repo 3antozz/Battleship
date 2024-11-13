@@ -97,7 +97,7 @@ class GameBoard {
         }
     }
 
-    CheckShipPlacement (row, column, ship, direction) {
+    CheckShipPlacement (ship, row, column, direction) {
         if (direction === "horizontal") {
             for (let i = 0; i < ship.length; i++) {
                 if (!this.isValid(row, column + i, ship.name)) {
@@ -117,25 +117,22 @@ class GameBoard {
 
 
     placeShip(ship, row, column, direction) {
-        if (this.CheckShipPlacement(row, column, ship, direction)) {
-            if (direction === "horizontal") {
-                for (let i = 0; i < ship.length; i++) {
-                    this.grid[row][column].isShipCell = true;
-                    this.grid[row][column].ship = ship;
-                    column++;
-                }
+        if (direction === "horizontal") {
+            for (let i = 0; i < ship.length; i++) {
+                this.grid[row][column].isShipCell = true;
+                this.grid[row][column].ship = ship;
+                column++;
             }
-            if (direction === "vertical") {
-                for (let i = 0; i < ship.length; i++) {
-                    this.grid[row][column].isShipCell = true;
-                    this.grid[row][column].ship = ship;
-                    row--;
-                }
-            }
-            return this.ships.push(ship);
-        } else {
-            return false;
         }
+        if (direction === "vertical") {
+            for (let i = 0; i < ship.length; i++) {
+                this.grid[row][column].isShipCell = true;
+                this.grid[row][column].ship = ship;
+                row--;
+            }
+        }
+        this.ships.push(ship);
+        return true;
     }
 
     receiveAttack(row, column) {

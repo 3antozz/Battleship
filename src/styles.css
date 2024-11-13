@@ -51,32 +51,46 @@ body {
 header h1 {
   text-align: center;
   font-size: 2.5rem;
+  line-height: normal;
+}
+
+header {
+  margin-bottom: 1rem;
+}
+
+footer {
+  margin-top: 0.5rem;
 }
 
 footer p {
   text-align: center;
   font-weight: bold;
+  line-height: normal;
 }
 
-.left-player button, .right-player button {
+.grid-left button, .grid-right button {
   aspect-ratio: 1/1;
 }
 
-.left-player {
+.grid-left {
+  width: 450px;
+  display: grid;
+  grid-template: repeat(10, 1fr)/repeat(10, 1fr);
+}
+
+.grid-right {
   width: 450px;
   display: grid;
   grid-template: repeat(10, 1fr)/repeat(10, 1fr);
 }
 
 .right-player {
-  width: 450px;
-  display: grid;
-  grid-template: repeat(10, 1fr)/repeat(10, 1fr);
+  display: none;
 }
+
 
 main {
   position: relative;
-  align-items: center;
   flex: 1;
   display: flex;
   justify-content: space-around;
@@ -99,6 +113,40 @@ main p {
   font-size: 3vw;
   position: absolute;
 }
+
+.left-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.buttons button {
+  padding: 0.3rem 2rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.start {
+  background-color: rgba(255, 0, 0, 0.5);
+  padding: 0.3rem 2rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.random {
+  background-color: rgba(0, 0, 255, 0.2);
+}
+
+.left-player h1 {
+  line-height: normal;
+}
+
+.highlight-cell {
+  background-color: rgba(0, 255, 255, 0.1);
+}
+
+
 
 
 
