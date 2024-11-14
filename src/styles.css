@@ -72,13 +72,18 @@ footer p {
 .grid-left button, .grid-right button {
   aspect-ratio: 1/1;
   background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .grid-left, .grid-right {
-  width: 450px;
+  width: 430px;
   display: grid;
   grid-template: repeat(10, 1fr)/repeat(10, 1fr);
+  order: 2;
+}
+
+.buttons:not(:first-child) {
+  order: 3;
 }
 
 
@@ -87,8 +92,7 @@ footer p {
 }
 
 .active-board {
-  /* border: 3px solid red; */
-  box-shadow: 3px 3px 7px 0px red;
+  box-shadow: 0px 0px 5px 3px red;
 }
 
 
@@ -102,16 +106,48 @@ main {
 
 .unhit-ship {
   background-color: cyan !important;
-  border: 1px solid black !important;
+  border: 1px solid rgba(0, 0, 0, 0.7) !important;
 }
 
 .hit-ship {
-  background-color: rgba(255, 0, 0, 0.5) !important;
-  border: 1px solid black !important;
+  background-color: cyan !important;
+  box-shadow: inset 0 0 2px 3px #0065d8;
+}
+
+.sunk-ship {
+  background-color: rgba(255, 0, 0, 0.621) !important;
+  box-shadow: none !important;
 }
 
 .hit-cell {
   background-color: rgba(0, 0, 255, 0.5) !important;
+}
+
+.cell {
+  position: relative;
+}
+
+.cell.miss::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  height: 30%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: black;
+  z-index: 1;
+}
+
+.cell.hit-ship::before {
+  content: "✕";
+  font-size: 2rem;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .hit {
@@ -123,12 +159,13 @@ main {
 }
 
 .paras {
+  order: 2;
   text-align: center;
   width: 15rem;
-  display: none;
 }
 
 .left-player {
+  order: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -140,6 +177,7 @@ main {
   padding: 0.3rem 2rem;
   font-weight: bold;
   font-size: 1.2rem;
+  order: 1;
 }
 
 .start {
@@ -170,11 +208,22 @@ main {
 }
 
 .right-player-visible {
+  order: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
 }
+
+.cell[data-player="computer"].unhit-cell:hover {
+  background-color: rgb(207, 207, 207);
+  cursor: crosshair;
+}
+
+.left-player h2 {
+  order: 1;
+}
+
 
 
 

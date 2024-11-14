@@ -23,14 +23,21 @@ class DOMHandler {
         button.dataset.row = cell.row;
         button.dataset.column = cell.column;
         button.dataset.player = cell.player;
+        button.classList.add("cell", "unhit-cell");
+        if (cell.ship && cell.ship.isSunk()) {
+            button.classList.add("sunk-ship");
+        }
         if (cell.isShipCell && cell.player === "player") {
             button.classList.add("unhit-ship");
             button.dataset.ship = cell.ship.name;
+        } else if (cell.isShipCell) {
+            button.dataset.ship = cell.ship.name;
         }
         if (cell.isHit) {
-            button.classList.add("hit-cell");
+            button.classList.add("miss");
+            button.classList.remove("unhit-cell");
             if (cell.isShipCell) {
-                button.classList.remove("hit-cell");
+                button.classList.remove("miss");
                 button.classList.remove("unhit-ship");
                 button.classList.add("hit-ship");
             }
@@ -157,9 +164,13 @@ class DOMHandler {
     }
 
     hideButtons(...domElements) {
+        const leftPlayer = document.querySelector(".left-player");
         domElements.forEach((element) => {
             element.classList.add("hidden");
         });
+        const header2 = document.createElement("h2");
+        header2.textContent = "Your Board";
+        leftPlayer.appendChild(header2);
     }
     enableOverlay(player) {
         if (player === "computer") {
@@ -184,8 +195,30 @@ class DOMHandler {
     }
 
     showMessages() {
-        const messages = document.querySelector(".paras")
-        messages.style.display = "block";
+        const main = document.querySelector("main");
+        const paras = document.createElement("div");
+        paras.classList.add("paras");
+        const hit = document.createElement("p");
+        hit.classList.add("hit");
+        const turn = document.createElement("p");
+        turn.classList.add("turn");
+        paras.append(hit, turn);
+        main.appendChild(paras);
+    }
+
+    hideMessages() {
+        const hit = document.querySelector(".hit");
+        const turn = document.querySelector(".turn");
+        hit.textContent = "";
+        turn.textContent = "";
+    }
+
+    renderWinner (message) {
+        this.hideMessages();
+        const p = document.querySelector(".paras");
+        const header = document.createElement("h1");
+        header.textContent = message;
+        p.appendChild(header);
     }
 }
 module.exports = DOMHandler;

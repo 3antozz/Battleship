@@ -34,10 +34,15 @@ class GameController {
     }
 
     gameOver() {
-        return (
-            this.playerOne.board.isAllShipsSunk() ||
-            this.playerTwo.board.isAllShipsSunk()
-        );
+        if (this.playerOne.board.isAllShipsSunk()) {
+            this.winner = 'Computer';
+            return true;
+        } else if (this.playerTwo.board.isAllShipsSunk()) {
+            this.winner = 'You';
+            return true;
+        } else {
+            return false;
+        }
     }
 
     cpuAlgo() {
@@ -214,6 +219,9 @@ class GameController {
             if (playerTurn === false) {
                 return;
             }
+            if (this.gameOver()) {
+                this.DOM.renderWinner(`${this.winner} Won!`);
+            }
             if (!this.playerTwo.board.grid[cell[0]][cell[1]].isShipCell) {
                 this.switchTurn();
                 this.DOM.renderTurnStatus(this.playerTwo.type);
@@ -249,6 +257,9 @@ class GameController {
             this.DOM.renderTurnStatus(this.playerOne.type);
             this.DOM.enableOverlay('computer');
             this.switchTurn();
+        }
+        if (this.gameOver()) {
+            this.DOM.renderWinner(`${this.winner} Won!`);
         }
     }
 }
