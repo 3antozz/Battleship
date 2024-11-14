@@ -41,7 +41,7 @@ class DOMHandler {
             gridDiv.appendChild(button);
         } else {
             const rightDiv = document.querySelector(".right-player");
-            rightDiv.style.display = "block";
+            rightDiv.classList.add("right-player-visible");
             const gridDiv = document.querySelector(".grid-right");
             gridDiv.appendChild(button);
         }
@@ -54,6 +54,19 @@ class DOMHandler {
     renderShotStatus(message) {
         const p = document.querySelector(".hit");
         p.textContent = message;
+        p.style.color = "black";
+        if (message === "Hit!" || message === "Ship has Sunk!") {
+            p.style.color = "red";
+        }
+    }
+
+    renderTurnStatus(player) {
+        const p = document.querySelector(".turn");
+        if (player === "player") {
+            p.textContent = "Your Turn";
+        } else {
+            p.textContent = "Computer's Turn";
+        }
     }
 
     highlightShip(DOMCell, length, direction) {
@@ -141,6 +154,38 @@ class DOMHandler {
                 this.redCells.push(cell);
             }
         }
+    }
+
+    hideButtons(...domElements) {
+        domElements.forEach((element) => {
+            element.classList.add("hidden");
+        });
+    }
+    enableOverlay(player) {
+        if (player === "computer") {
+            const grid = document.querySelector(".grid-right");
+            grid.classList.add("active-board");
+            this.disableOverlay("player");
+        } else {
+            const grid = document.querySelector(".grid-left");
+            grid.classList.add("active-board");
+            this.disableOverlay("computer");
+        }
+    }
+
+    disableOverlay(player) {
+        if (player === "computer") {
+            const grid = document.querySelector(".grid-right");
+            grid.classList.remove("active-board");
+        } else {
+            const grid = document.querySelector(".grid-left");
+            grid.classList.remove("active-board");
+        }
+    }
+
+    showMessages() {
+        const messages = document.querySelector(".paras")
+        messages.style.display = "block";
     }
 }
 module.exports = DOMHandler;

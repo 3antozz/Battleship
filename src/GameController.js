@@ -13,6 +13,7 @@ class GameController {
         this.currentShipIndex = 0;
         this.placementAllowed = false;
         this.DOM = DOM;
+        this.computerTurnResult = null;
     }
 
     createNewPlayer() {
@@ -39,7 +40,7 @@ class GameController {
         );
     }
 
-    computerTurn() {
+    cpuAlgo() {
         if (this.cpuQueue.length === 0) {
             let row = Math.floor(Math.random() * 10);
             let column = Math.floor(Math.random() * 10);
@@ -59,7 +60,7 @@ class GameController {
         } else {
             let [row, column] = this.cpuQueue.shift();
             if (this.playerOne.board.grid[row][column].isHit) {
-                return this.computerTurn();
+                return this.cpuAlgo();
             }
             if (this.playerOne.board.grid[row][column].isShipCell) {
                 if (row === this.firstHit[0]) {
@@ -201,6 +202,7 @@ class GameController {
 
     handleAttack(event) {
         if (!this.gameOver() && this.currentPlayer.type === "player") {
+            this.DOM.renderTurnStatus(this.playerOne.type);
             const cell = [
                 event.target.dataset.row,
                 event.target.dataset.column,
@@ -212,21 +214,41 @@ class GameController {
             if (playerTurn === false) {
                 return;
             }
-            this.switchTurn();
-            this.DOM.renderShotStatus(playerTurn);
-            this.DOM.renderGrid(this.playerTwo.board.grid);
-            if (!this.gameOver()) {
-                setTimeout(() => {
-                    const computerTurn = this.computerTurn();
-                    this.DOM.renderShotStatus(computerTurn);
-                    this.DOM.renderGrid(this.playerOne.board.grid);
-                }, 600);
+            if (!this.playerTwo.board.grid[cell[0]][cell[1]].isShipCell) {
                 this.switchTurn();
+                this.DOM.renderTurnStatus(this.playerTwo.type);
+                this.DOM.enableOverlay('player');
+                this.DOM.renderShotStatus(playerTurn);
+                this.DOM.renderGrid(this.playerTwo.board.grid);
+                if (!this.gameOver()) {
+                    setTimeout(() => this.computerPlay(), 600);
+                } else {
+                    return;
+                }
             } else {
-                return;
+                this.DOM.renderShotStatus(playerTurn);
+                this.DOM.renderGrid(this.playerTwo.board.grid);
             }
         } else {
             return;
+        }
+    }
+
+    computerPlay() {
+        this.computerTurnResult = this.cpuAlgo();
+        this.DOM.renderShotStatus(this.computerTurnResult);
+        this.DOM.renderTurnStatus(this.playerTwo.type);
+        this.DOM.enableOverlay('player');
+        this.DOM.renderGrid(this.playerOne.board.grid);
+        if (
+            (!this.gameOver() && this.computerTurnResult === "Ship has Sunk!") ||
+            (!this.gameOver() && this.computerTurnResult === "Hit!")
+        ) {
+            setTimeout(() => this.computerPlay(), 600);
+        } else {
+            this.DOM.renderTurnStatus(this.playerOne.type);
+            this.DOM.enableOverlay('computer');
+            this.switchTurn();
         }
     }
 }

@@ -46,6 +46,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 0.3rem;
+  background-color: beige;
 }
 
 header h1 {
@@ -70,22 +71,24 @@ footer p {
 
 .grid-left button, .grid-right button {
   aspect-ratio: 1/1;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.grid-left {
+.grid-left, .grid-right {
   width: 450px;
   display: grid;
   grid-template: repeat(10, 1fr)/repeat(10, 1fr);
 }
 
-.grid-right {
-  width: 450px;
-  display: grid;
-  grid-template: repeat(10, 1fr)/repeat(10, 1fr);
-}
 
 .right-player {
   display: none;
+}
+
+.active-board {
+  /* border: 3px solid red; */
+  box-shadow: 3px 3px 7px 0px red;
 }
 
 
@@ -93,25 +96,36 @@ main {
   position: relative;
   flex: 1;
   display: flex;
-  justify-content: space-around;
-  gap: 3rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .unhit-ship {
-  background-color: cyan;
+  background-color: cyan !important;
+  border: 1px solid black !important;
 }
 
 .hit-ship {
-  background-color: red;
+  background-color: rgba(255, 0, 0, 0.5) !important;
+  border: 1px solid black !important;
 }
 
 .hit-cell {
-  background-color: rgba(0, 0, 255, 0.559);
+  background-color: rgba(0, 0, 255, 0.5) !important;
 }
 
-main p {
-  font-size: 3vw;
-  position: absolute;
+.hit {
+  font-size: calc(2vw + 1.5rem);
+}
+
+.turn {
+  font-size: calc(1.5vw + 0.5rem);
+}
+
+.paras {
+  text-align: center;
+  width: 15rem;
+  display: none;
 }
 
 .left-player {
@@ -119,6 +133,7 @@ main p {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  align-self: stretch;
 }
 
 .buttons button {
@@ -143,12 +158,25 @@ main p {
 }
 
 .highlight-cell {
-  background-color: rgba(0, 255, 0, 0.3);
+  background-color: rgba(0, 255, 0, 0.5) !important;
 }
 
 .unallowed-cell {
-  background-color: rgba(255, 0, 0, 0.3);
+  background-color: rgba(255, 0, 0, 0.5) !important;
 }
+
+.hidden {
+  display: none !important;
+}
+
+.right-player-visible {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+
 
 
 

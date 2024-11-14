@@ -42,8 +42,11 @@ const GameController = require("./GameController");
             rightGrid.addEventListener("click", (event) => {
                 gameControl.handleAttack(event);
             });
+            DOM.hideButtons(randomButton, rotateButton, clearButton, startButton);
+            DOM.showMessages();
             gameControl.startGame();
             DOM.renderGrid(gameControl.playerTwo.board.grid);
+            DOM.enableOverlay('computer');
         } else {
             alert("Please place all your ships!");
         }
