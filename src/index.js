@@ -11,13 +11,18 @@ const GameController = require("./GameController");
     const startButton = document.querySelector(".start");
     const leftGrid = document.querySelector(".grid-left");
     const rightGrid = document.querySelector(".grid-right");
+    const closeDialog = document.querySelector(".close");
+    const dialog = document.querySelector("dialog");
 
     DOM.renderGrid(gameControl.playerOne.board.grid);
+
+
 
     randomButton.addEventListener("click", () => {
         gameControl.createNewPlayer();
         gameControl.randomizeShipsPlacement(gameControl.playerOne.board);
         DOM.renderGrid(gameControl.playerOne.board.grid);
+        DOM.fillDOMShips();
     });
 
     rotateButton.addEventListener("click", () => {
@@ -27,6 +32,8 @@ const GameController = require("./GameController");
     clearButton.addEventListener("click", () => {
         gameControl.createNewPlayer();
         DOM.renderGrid(gameControl.playerOne.board.grid);
+        DOM.clearDOMShips();
+        gameControl.currentShipPlacement = 5;
     });
 
     leftGrid.addEventListener("mouseover", (event) => {
@@ -37,18 +44,24 @@ const GameController = require("./GameController");
         gameControl.handleClick(event);
     });
 
+    rightGrid.addEventListener("click", (event) => {
+        gameControl.handleAttack(event);
+    });
+
+    closeDialog.addEventListener("click", () => {
+        dialog.close();
+    })
+
     startButton.addEventListener("click", () => {
         if (gameControl.playerOne.board.ships.length === 5) {
-            const rightGrid = document.querySelector(".grid-right");
-            rightGrid.addEventListener("click", (event) => {
-                gameControl.handleAttack(event);
-            });
             DOM.hideButtons(
                 randomButton,
                 rotateButton,
                 clearButton,
                 startButton,
             );
+            DOM.hideProtoShips();
+            gameControl.currentShipPlacement = 5;
             DOM.showMessages();
             DOM.createRestartBtn();
             gameControl.startGame();
@@ -59,6 +72,7 @@ const GameController = require("./GameController");
             const restartBtn = document.querySelector(".restart");
             restartBtn.addEventListener("click", () => {
                 gameControl = new GameController(DOM);
+                DOM.showProtosShips();
                 DOM.hideRightSide();
                 DOM.hideParas();
                 DOM.showButtons(

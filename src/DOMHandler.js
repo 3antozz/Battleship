@@ -84,7 +84,7 @@ class DOMHandler {
             div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
         } else {
             p.textContent = "Wait";
-            div.style.backgroundColor = "rgb(255 85 85 / 50%)";
+            div.style.backgroundColor = "rgba(0, 0, 255, 0.4)";
         }
     }
 
@@ -180,10 +180,9 @@ class DOMHandler {
             const element = document.querySelector(".right-player .ships-left");
             element.textContent = `Ships left: ${shipsCount}`;
         } else {
-            const element = document.querySelector(".left-player .ships-left");
+            const element = document.querySelector(".left-player .ships-right");
             element.textContent = `Ships left: ${shipsCount}`;
         }
-
     }
 
     renderBoardInfo() {
@@ -192,7 +191,7 @@ class DOMHandler {
         infoDiv.classList.add("info");
         const header1 = document.createElement("h2");
         const header2 = document.createElement("h2");
-        header2.classList.add("ships-left");
+        header2.classList.add("ships-right");
         header1.textContent = "Your Board";
         header2.textContent = "Ships Left: 5";
         infoDiv.append(header1, header2);
@@ -208,11 +207,11 @@ class DOMHandler {
     enableOverlay(player) {
         if (player === "computer") {
             const grid = document.querySelector(".grid-right");
-            grid.classList.add("active-board");
+            grid.classList.add("active-board-player");
             this.disableOverlay("player");
         } else {
             const grid = document.querySelector(".grid-left");
-            grid.classList.add("active-board");
+            grid.classList.add("active-board-computer");
             this.disableOverlay("computer");
         }
     }
@@ -220,10 +219,10 @@ class DOMHandler {
     disableOverlay(player) {
         if (player === "computer") {
             const grid = document.querySelector(".grid-right");
-            grid.classList.remove("active-board");
+            grid.classList.remove("active-board-player");
         } else {
             const grid = document.querySelector(".grid-left");
-            grid.classList.remove("active-board");
+            grid.classList.remove("active-board-computer");
         }
     }
 
@@ -237,13 +236,6 @@ class DOMHandler {
         });
     }
 
-    hideMessages() {
-        const hit = document.querySelector(".hit");
-        const turn = document.querySelector(".turn");
-        hit.textContent = "";
-        turn.textContent = "";
-    }
-
     clearBoardInfo() {
         const infoDiv = document.querySelector(".left-player > .info");
         infoDiv.remove();
@@ -252,25 +244,70 @@ class DOMHandler {
     }
 
     renderWinner(message) {
-        this.hideMessages();
         const p = document.querySelector(".turn");
         p.textContent = message;
-
     }
 
-    hideRightSide () {
-        const rightPlayer = document.querySelector(".right-player")
+    showDialog(winner) {
+        const dialog = document.querySelector("dialog");
+        const p = document.querySelector(".box h1");
+        if (winner === "Computer") {
+            p.textContent = "You Lost";
+            p.style.color = "red";
+        } else {
+            p.textContent = "You Won!";
+            p.style.color = "#00bc00bd";
+        }
+        dialog.showModal();
+    }
+
+    currentShip(className) {
+        const cells = document.querySelectorAll(
+            `.ships .${className} .proto-cell`,
+        );
+        cells.forEach((cell) => {
+            cell.classList.add("placed-ship");
+        });
+    }
+
+    clearDOMShips() {
+        const cells = document.querySelectorAll(`.proto-cell`);
+        cells.forEach((cell) => {
+            cell.classList.remove("placed-ship");
+        });
+    }
+
+    fillDOMShips() {
+        const cells = document.querySelectorAll(`.proto-cell`);
+        cells.forEach((cell) => {
+            cell.classList.add("placed-ship");
+        });
+    }
+
+    hideProtoShips () {
+        const ships = document.querySelector(".ships");
+        ships.style.display = "none";
+        this.clearDOMShips();
+    }
+
+    showProtosShips() {
+        const ships = document.querySelector(".ships");
+        ships.style.display = "flex";
+    }
+
+    hideRightSide() {
+        const rightPlayer = document.querySelector(".right-player");
         rightPlayer.classList.remove("right-player-visible");
     }
 
-    hideParas () {
+    hideParas() {
         const paras = document.querySelector(".paras");
         paras.style.display = "none";
         const restartBtn = document.querySelector(".restart");
         restartBtn.remove();
     }
 
-    createRestartBtn () {
+    createRestartBtn() {
         const paras = document.querySelector(".paras");
         const button = document.createElement("button");
         button.classList.add("restart");

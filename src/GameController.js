@@ -14,6 +14,7 @@ class GameController {
         this.placementAllowed = false;
         this.DOM = DOM;
         this.computerTurnResult = null;
+        this.currentShipPlacement = 5;
     }
 
     createNewPlayer() {
@@ -199,6 +200,7 @@ class GameController {
         if (this.placementAllowed) {
             this.playerOne.board.placeShip(ship, +cell[0], +cell[1], direction);
             this.DOM.renderGrid(this.playerOne.board.grid);
+            this.DOM.currentShip(`ship${this.currentShipPlacement-this.currentShipIndex}`)
             this.currentShipIndex++;
         } else {
             return;
@@ -221,6 +223,7 @@ class GameController {
             }
             if (this.gameOver()) {
                 this.DOM.renderWinner(`${this.winner} Won!`);
+                this.DOM.showDialog(this.winner);
                 this.DOM.updateShipCount(
                     this.playerTwo.board.shipsLeftCount(),
                     "computer",
@@ -275,6 +278,7 @@ class GameController {
         }
         if (this.gameOver()) {
             this.DOM.renderWinner(`${this.winner} Won!`);
+            this.DOM.showDialog(this.winner);
             this.DOM.updateShipCount(
                 this.playerOne.board.shipsLeftCount(),
                 "player",

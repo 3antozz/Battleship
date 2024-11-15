@@ -92,8 +92,12 @@ footer p {
   display: none;
 }
 
-.active-board {
+.active-board-computer {
   box-shadow: 0px 0px 5px 3px red;
+}
+
+.active-board-player {
+  box-shadow: 0px 0px 5px 3px blue;
 }
 
 
@@ -129,6 +133,42 @@ main {
   position: relative;
 }
 
+.ships {
+  order: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-left: 5rem;
+  margin-top: 7%;
+  align-self: stretch;
+}
+
+.ships h2 {
+  width: 20ch;
+  text-align: center;
+  font-size: 1.5rem;
+  align-self: flex-start;
+}
+
+.ship5, .ship4, .ship3, .ship2, .ship1  {
+  display: flex;
+  align-items: center;
+}
+
+.ships p {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  width: 1.7rem;
+  font-weight: bold;
+}
+
+.proto-cell {
+  width: 3rem;
+  aspect-ratio: 1/1;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .cell.miss::before {
   content: "";
   position: absolute;
@@ -158,7 +198,7 @@ main {
 
 .turn {
   /* font-size: calc(1.5vw + 0.5rem); */
-  font-size: calc(2vw + 1.2rem);
+  font-size: calc(2vw + 0.8rem);
   color: white;
 }
 
@@ -176,7 +216,7 @@ main {
   display: none;
   order: 2;
   text-align: center;
-  width: 15rem;
+  width: 12rem;
   flex-direction: column;
   align-items: center;
 }
@@ -208,11 +248,25 @@ main {
   justify-content: space-around;
 }
 
-.buttons button, .restart {
+.buttons button, .restart, .close {
   padding: 0.3rem 2rem;
   font-weight: bold;
   font-size: 1.2rem;
   order: 1;
+  border-radius: 10px;
+}
+
+.buttons button:hover, .restart:hover, .close:hover {
+  scale: 1.07;
+}
+
+.close {
+  background-color: rgba(255, 0, 0, 0.5);
+  font-size: inherit;
+}
+
+.rotate {
+  background-color: pink;
 }
 
 .buttons {
@@ -224,6 +278,7 @@ main {
   padding: 0.3rem 2rem;
   font-weight: bold;
   font-size: 1.2rem;
+  border-radius: 10px;
 }
 
 .random {
@@ -277,7 +332,43 @@ main {
 }
 
 .ships-left {
+  color: blue;
+}
+
+.ships-right {
   color: red;
+}
+
+
+dialog[open] {
+  background-color: rgba(128, 128, 128, 0.466);
+  box-sizing: content-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  font-size: 1.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  gap: 1rem;
+  height: 30%;
+  width: 30%;
+  border-radius: 20px;
+  border: 5px solid rgba(0, 0, 0, 0.8);
+}
+
+.placed-ship {
+  background-color: rgb(0 255 75) !important;
 }
 
 
