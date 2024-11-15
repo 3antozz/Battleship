@@ -58,21 +58,33 @@ class DOMHandler {
         gridDom.textContent = "";
     }
 
+    // renderShotStatus(message) {
+    //     const p = document.querySelector(".hit");
+    //     p.textContent = message;
+    //     p.style.color = "black";
+    //     if (message === "Hit!" || message === "Ship has Sunk!") {
+    //         p.style.color = "red";
+    //     }
+    // }
+
     renderShotStatus(message) {
-        const p = document.querySelector(".hit");
-        p.textContent = message;
-        p.style.color = "black";
-        if (message === "Hit!" || message === "Ship has Sunk!") {
-            p.style.color = "red";
+        const p = document.querySelector(".turn");
+        if (message === "Ship has Sunk!") {
+            const div = document.querySelector(".turn-div");
+            p.textContent = message;
+            div.style.backgroundColor = "red";
         }
     }
 
     renderTurnStatus(player) {
+        const div = document.querySelector(".turn-div");
         const p = document.querySelector(".turn");
         if (player === "player") {
             p.textContent = "Your Turn";
+            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
         } else {
-            p.textContent = "Computer's Turn";
+            p.textContent = "Wait";
+            div.style.backgroundColor = "rgb(255 85 85 / 50%)";
         }
     }
 
@@ -163,14 +175,35 @@ class DOMHandler {
         }
     }
 
-    hideButtons(...domElements) {
+    updateShipCount(shipsCount, player) {
+        if (player === "computer") {
+            const element = document.querySelector(".right-player .ships-left");
+            element.textContent = `Ships left: ${shipsCount}`;
+        } else {
+            const element = document.querySelector(".left-player .ships-left");
+            element.textContent = `Ships left: ${shipsCount}`;
+        }
+
+    }
+
+    renderBoardInfo() {
         const leftPlayer = document.querySelector(".left-player");
+        const infoDiv = document.createElement("div");
+        infoDiv.classList.add("info");
+        const header1 = document.createElement("h2");
+        const header2 = document.createElement("h2");
+        header2.classList.add("ships-left");
+        header1.textContent = "Your Board";
+        header2.textContent = "Ships Left: 5";
+        infoDiv.append(header1, header2);
+        leftPlayer.appendChild(infoDiv);
+    }
+
+    hideButtons(...domElements) {
         domElements.forEach((element) => {
             element.classList.add("hidden");
         });
-        const header2 = document.createElement("h2");
-        header2.textContent = "Your Board";
-        leftPlayer.appendChild(header2);
+        this.renderBoardInfo();
     }
     enableOverlay(player) {
         if (player === "computer") {
@@ -195,15 +228,13 @@ class DOMHandler {
     }
 
     showMessages() {
-        const main = document.querySelector("main");
-        const paras = document.createElement("div");
-        paras.classList.add("paras");
-        const hit = document.createElement("p");
-        hit.classList.add("hit");
-        const turn = document.createElement("p");
-        turn.classList.add("turn");
-        paras.append(hit, turn);
-        main.appendChild(paras);
+        const para = document.querySelector(".paras");
+        para.style.display = "flex";
+    }
+    showButtons(...domElements) {
+        domElements.forEach((element) => {
+            element.classList.remove("hidden");
+        });
     }
 
     hideMessages() {
@@ -213,12 +244,38 @@ class DOMHandler {
         turn.textContent = "";
     }
 
-    renderWinner (message) {
+    clearBoardInfo() {
+        const infoDiv = document.querySelector(".left-player > .info");
+        infoDiv.remove();
+        const grid = document.querySelector(".grid-left");
+        grid.classList.remove("active-board");
+    }
+
+    renderWinner(message) {
         this.hideMessages();
-        const p = document.querySelector(".paras");
-        const header = document.createElement("h1");
-        header.textContent = message;
-        p.appendChild(header);
+        const p = document.querySelector(".turn");
+        p.textContent = message;
+
+    }
+
+    hideRightSide () {
+        const rightPlayer = document.querySelector(".right-player")
+        rightPlayer.classList.remove("right-player-visible");
+    }
+
+    hideParas () {
+        const paras = document.querySelector(".paras");
+        paras.style.display = "none";
+        const restartBtn = document.querySelector(".restart");
+        restartBtn.remove();
+    }
+
+    createRestartBtn () {
+        const paras = document.querySelector(".paras");
+        const button = document.createElement("button");
+        button.classList.add("restart");
+        button.textContent = "Restart";
+        paras.appendChild(button);
     }
 }
 module.exports = DOMHandler;

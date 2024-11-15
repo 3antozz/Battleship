@@ -24,7 +24,7 @@ class Cell {
             [0, 1],
             [1, 0],
             [0, -1],
-            [1, -1],
+            [-1, 0],
             [1, 1],
             [-1, 1],
             [1, -1],
@@ -145,6 +145,7 @@ class GameBoard {
             for (let i = 0; i < ship.length; i++) {
                 this.grid[row][column].isShipCell = true;
                 this.grid[row][column].ship = ship;
+                ship.cells.push([row, column]);
                 column++;
             }
         }
@@ -152,6 +153,7 @@ class GameBoard {
             for (let i = 0; i < ship.length; i++) {
                 this.grid[row][column].isShipCell = true;
                 this.grid[row][column].ship = ship;
+                ship.cells.push([row, column]);
                 row--;
             }
         }
@@ -169,6 +171,9 @@ class GameBoard {
             if (cell.isShipCell) {
                 cell.ship.hit();
                 if (cell.ship.isSunk()) {
+                    if (cell.player === "player") {
+                        this.hitAdjacentCells(cell.ship);
+                    }
                     return "Ship has Sunk!";
                 }
                 return "Hit!";
@@ -189,6 +194,30 @@ class GameBoard {
             return true;
         }
         return false;
+    }
+
+    hitAdjacentCells(ship) {
+        const shipCells = ship.cells;
+        shipCells.forEach((coords) => {
+            const cell = this.grid[coords[0]][coords[1]];
+            const adjacentCells = cell.getAdjacentCells();
+            adjacentCells.forEach((coords) => {
+                const adjCell = this.grid[coords[0]][coords[1]];
+                if (!adjCell.isHit) {
+                    adjCell.isHit = true;
+                }
+            });
+        });
+    }
+
+    shipsLeftCount() {
+        let total = 0;
+        this.ships.forEach((ship) => {
+            if (!ship.isSunk()) {
+                total++;
+            }
+        });
+        return total;
     }
 }
 

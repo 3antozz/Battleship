@@ -4,12 +4,13 @@ const GameController = require("./GameController");
 
 (function init() {
     const DOM = new DOMHandler();
-    const gameControl = new GameController(DOM);
+    let gameControl = new GameController(DOM);
     const randomButton = document.querySelector(".random");
     const rotateButton = document.querySelector(".rotate");
     const clearButton = document.querySelector(".clear");
     const startButton = document.querySelector(".start");
     const leftGrid = document.querySelector(".grid-left");
+    const rightGrid = document.querySelector(".grid-right");
 
     DOM.renderGrid(gameControl.playerOne.board.grid);
 
@@ -42,11 +43,36 @@ const GameController = require("./GameController");
             rightGrid.addEventListener("click", (event) => {
                 gameControl.handleAttack(event);
             });
-            DOM.hideButtons(randomButton, rotateButton, clearButton, startButton);
+            DOM.hideButtons(
+                randomButton,
+                rotateButton,
+                clearButton,
+                startButton,
+            );
             DOM.showMessages();
+            DOM.createRestartBtn();
             gameControl.startGame();
             DOM.renderGrid(gameControl.playerTwo.board.grid);
-            DOM.enableOverlay('computer');
+            DOM.updateShipCount(5, "computer");
+            DOM.renderTurnStatus("player");
+            DOM.enableOverlay("computer");
+            const restartBtn = document.querySelector(".restart");
+            restartBtn.addEventListener("click", () => {
+                gameControl = new GameController(DOM);
+                DOM.hideRightSide();
+                DOM.hideParas();
+                DOM.showButtons(
+                    randomButton,
+                    rotateButton,
+                    clearButton,
+                    startButton,
+                );
+                DOM.renderGrid(gameControl.playerOne.board.grid);
+                DOM.clearBoardInfo();
+                setTimeout(() => {
+                    DOM.renderGrid(gameControl.playerOne.board.grid);
+                }, 400);
+            });
         } else {
             alert("Please place all your ships!");
         }
