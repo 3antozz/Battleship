@@ -85,6 +85,8 @@ const GameController = require("./GameController");
                 DOM.clearBoardInfo();
                 setTimeout(() => {
                     DOM.renderGrid(gameControl.playerOne.board.grid);
+                    const grid = document.querySelector(".grid-left");
+                    grid.classList.remove("active-board");
                 }, 400);
             });
         } else {

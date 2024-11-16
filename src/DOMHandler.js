@@ -30,8 +30,6 @@ class DOMHandler {
         if (cell.isShipCell && cell.player === "player") {
             button.classList.add("unhit-ship");
             button.dataset.ship = cell.ship.name;
-        } else if (cell.isShipCell) {
-            button.dataset.ship = cell.ship.name;
         }
         if (cell.isHit) {
             button.classList.add("miss");
@@ -206,23 +204,27 @@ class DOMHandler {
     }
     enableOverlay(player) {
         if (player === "computer") {
-            const grid = document.querySelector(".grid-right");
-            grid.classList.add("active-board-player");
+            const gridRight = document.querySelector(".grid-right");
+            const grid = document.querySelector(".grid-left");
+            grid.classList.add("active-board");
+            gridRight.classList.add("active-board-player");
             this.disableOverlay("player");
         } else {
-            const grid = document.querySelector(".grid-left");
-            grid.classList.add("active-board-computer");
+            const grid = document.querySelector(".grid-right");
+            grid.classList.add("active-board");
             this.disableOverlay("computer");
         }
     }
 
     disableOverlay(player) {
         if (player === "computer") {
-            const grid = document.querySelector(".grid-right");
-            grid.classList.remove("active-board-player");
-        } else {
+            const gridRight = document.querySelector(".grid-right");
             const grid = document.querySelector(".grid-left");
-            grid.classList.remove("active-board-computer");
+            grid.classList.remove("active-board", "active-board-player");
+            gridRight.classList.remove("active-board-player");
+        } else {
+            const grid = document.querySelector(".grid-right");
+            grid.classList.remove("active-board");
         }
     }
 
@@ -284,7 +286,7 @@ class DOMHandler {
         });
     }
 
-    hideProtoShips () {
+    hideProtoShips() {
         const ships = document.querySelector(".ships");
         ships.style.display = "none";
         this.clearDOMShips();
