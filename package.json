@@ -7,6 +7,7 @@
     "test": "jest",
     "dev": "webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "pre-deploy": "git branch gh-pages && git checkout gh-pages && git merge main --no-edit",
     "deploy": "git add dist -f && git commit && git subtree push --prefix dist origin gh-pages"
   },
   "jest": {
