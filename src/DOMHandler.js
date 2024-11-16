@@ -56,14 +56,6 @@ class DOMHandler {
         gridDom.textContent = "";
     }
 
-    // renderShotStatus(message) {
-    //     const p = document.querySelector(".hit");
-    //     p.textContent = message;
-    //     p.style.color = "black";
-    //     if (message === "Hit!" || message === "Ship has Sunk!") {
-    //         p.style.color = "red";
-    //     }
-    // }
 
     renderShotStatus(message) {
         const p = document.querySelector(".turn");
