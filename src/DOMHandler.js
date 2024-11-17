@@ -71,10 +71,10 @@ class DOMHandler {
         const p = document.querySelector(".turn");
         if (player === "player") {
             p.textContent = "Your Turn";
-            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            div.style.backgroundColor = "rgba(0, 188, 0, 0.74)";
         } else {
             p.textContent = "Wait";
-            div.style.backgroundColor = "rgba(0, 0, 255, 0.4)";
+            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
         }
     }
 
@@ -240,6 +240,10 @@ class DOMHandler {
     renderWinner(message) {
         const p = document.querySelector(".turn");
         p.textContent = message;
+        if (message === "Computer Won!") {
+            const div = document.querySelector(".turn-div");
+            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        }
     }
 
     showDialog(winner) {

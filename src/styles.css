@@ -93,7 +93,7 @@ footer p {
 }
 
 .active-board-player {
-  box-shadow: 0px 0px 5px 3px red;
+  box-shadow: 0px 0px 5px 3px rgba(0, 188, 0, 0.9);
 }
 
 .active-board-computer {
@@ -331,11 +331,11 @@ main {
 }
 
 .ships-right {
-  color: blue;
+  color: red;
 }
 
 .ships-left {
-  color: red;
+  color: rgba(0, 188, 0, 0.9);
 }
 
 
