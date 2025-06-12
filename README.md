@@ -47,6 +47,7 @@ cd Battleship
 2- Start the server:
 
 ```bash
+npm install
 npm run dev
 ```
 > [!NOTE]
