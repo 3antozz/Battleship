@@ -302,7 +302,7 @@ section {
 }
 
 .right-player .info, .right-player .ships-count {
-  background-color: rgba(255, 0, 0, 1);
+  background-color: #DC3545;
 }
 
 .inactive-board {
@@ -412,7 +412,7 @@ section {
   font-size: clamp(1.05rem, 2vw, 1.2rem);
   text-align: center;
   width: 110%;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 0.3rem 0;
 }
 
@@ -458,7 +458,7 @@ dialog[open] {
 .box h1 {
   font-size: 3rem;
   font-weight: 900;
-  color: #e74c3c; /* bold red */
+  color: #DC3545;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
 }
 
