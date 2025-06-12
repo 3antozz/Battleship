@@ -15,6 +15,7 @@ const GameController = require("./GameController");
     const dialog = document.querySelector("dialog");
 
     DOM.renderGrid(gameControl.playerOne.board.grid);
+    DOM.shipIndicator("5")
 
 
 
@@ -23,6 +24,7 @@ const GameController = require("./GameController");
         gameControl.randomizeShipsPlacement(gameControl.playerOne.board);
         DOM.renderGrid(gameControl.playerOne.board.grid);
         DOM.fillDOMShips();
+        DOM.removeIndicator();
     });
 
     rotateButton.addEventListener("click", () => {
@@ -33,6 +35,8 @@ const GameController = require("./GameController");
         gameControl.createNewPlayer();
         DOM.renderGrid(gameControl.playerOne.board.grid);
         DOM.clearDOMShips();
+        DOM.removeIndicator();
+        DOM.shipIndicator("5");
         gameControl.currentShipPlacement = 5;
     });
 
@@ -67,14 +71,15 @@ const GameController = require("./GameController");
             gameControl.startGame();
             DOM.renderGrid(gameControl.playerTwo.board.grid);
             DOM.updateShipCount(5, "computer");
-            DOM.renderTurnStatus("player");
-            DOM.enableOverlay("computer");
+            DOM.renderTurnStatus("player", true);
+            DOM.enableOverlay("computer", true);
             const restartBtn = document.querySelector(".restart");
             restartBtn.addEventListener("click", () => {
                 gameControl = new GameController(DOM);
                 DOM.showProtosShips();
                 DOM.hideRightSide();
                 DOM.hideParas();
+                DOM.shipIndicator("5");
                 DOM.showButtons(
                     randomButton,
                     rotateButton,

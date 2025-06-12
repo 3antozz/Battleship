@@ -24,6 +24,7 @@ class DOMHandler {
         button.dataset.column = cell.column;
         button.dataset.player = cell.player;
         button.classList.add("cell", "unhit-cell");
+        button.ariaLabel = "cell button"
         if (cell.ship && cell.ship.isSunk()) {
             button.classList.add("sunk-ship");
         }
@@ -52,6 +53,11 @@ class DOMHandler {
         }
     }
 
+    animateCell(player, row, column) {
+        const cell = document.querySelector(`[data-player="${player}"][data-row="${row}"][data-column="${column}"]`);
+        cell.classList.add("animate-miss")
+    }
+
     clearGrid(gridDom) {
         gridDom.textContent = "";
     }
@@ -62,20 +68,22 @@ class DOMHandler {
         if (message === "Ship has Sunk!") {
             const div = document.querySelector(".turn-div");
             p.textContent = message;
-            div.style.backgroundColor = "red";
+            div.style.backgroundColor = "#ee9090";
         }
     }
 
-    renderTurnStatus(player) {
-        const div = document.querySelector(".turn-div");
-        const p = document.querySelector(".turn");
-        if (player === "player") {
-            p.textContent = "Your Turn";
-            div.style.backgroundColor = "rgba(0, 188, 0, 0.74)";
-        } else {
-            p.textContent = "Wait";
-            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-        }
+    renderTurnStatus(player, init = false) {
+        setTimeout(() => {
+            // const div = document.querySelector(".turn-div");
+            const p = document.querySelector(".right-player .info h2");
+            if (player === "player") {
+                p.textContent = "Your Turn";
+                // div.style.backgroundColor = "#90ee90";
+            } else {
+                p.textContent = "Computer Board";
+                // div.style.backgroundColor = "#ee9090";
+            }
+        }, init ? 0 : 350)
     }
 
     highlightShip(DOMCell, length, direction) {
@@ -87,6 +95,7 @@ class DOMHandler {
         }
         this.highlightedCells.push(DOMCell);
         DOMCell.classList.add("highlight-cell");
+        DOMCell.style.cursor = "pointer";
         if (direction === "horizontal") {
             let row = DOMCell.dataset.row;
             let column = DOMCell.dataset.column;
@@ -169,23 +178,34 @@ class DOMHandler {
         if (player === "computer") {
             const element = document.querySelector(".right-player .ships-left");
             element.textContent = `Ships left: ${shipsCount}`;
+            const grid = document.querySelector(".right-player");
+            grid.classList.remove('shake');
+            grid.offsetHeight;
+            grid.classList.add('shake');
         } else {
             const element = document.querySelector(".left-player .ships-right");
             element.textContent = `Ships left: ${shipsCount}`;
+            const grid = document.querySelector(".left-player");
+            grid.classList.remove('shake');
+            grid.offsetHeight;
+            grid.classList.add('shake');
         }
     }
 
     renderBoardInfo() {
         const leftPlayer = document.querySelector(".left-player");
         const infoDiv = document.createElement("div");
+        const shipsDiv = document.createElement("div");
         infoDiv.classList.add("info");
+        shipsDiv.classList.add("ships-count");
         const header1 = document.createElement("h2");
         const header2 = document.createElement("h2");
         header2.classList.add("ships-right");
         header1.textContent = "Your Board";
         header2.textContent = "Ships Left: 5";
-        infoDiv.append(header1, header2);
-        leftPlayer.appendChild(infoDiv);
+        infoDiv.appendChild(header1);
+        shipsDiv.appendChild(header2);
+        leftPlayer.append(infoDiv, shipsDiv);
     }
 
     hideButtons(...domElements) {
@@ -194,7 +214,8 @@ class DOMHandler {
         });
         this.renderBoardInfo();
     }
-    enableOverlay(player) {
+    enableOverlay(player, init = false) {
+        setTimeout(() => {
         if (player === "computer") {
             const gridRight = document.querySelector(".grid-right");
             const grid = document.querySelector(".grid-left");
@@ -206,15 +227,24 @@ class DOMHandler {
             grid.classList.add("active-board");
             this.disableOverlay("computer");
         }
+        }, init ? 0 : 350)
     }
 
     disableOverlay(player) {
         if (player === "computer") {
             const gridRight = document.querySelector(".grid-right");
+            const rightDivs = document.querySelectorAll(".right-player > div:not(:nth-child(2))");
+            const leftDivs = document.querySelectorAll(".left-player > div:not(:nth-child(2))");
             const grid = document.querySelector(".grid-left");
+            rightDivs.forEach(div => div.classList.add("inactive-board"));
+            leftDivs.forEach(div => div.classList.remove("inactive-board"));
             grid.classList.remove("active-board", "active-board-player");
             gridRight.classList.remove("active-board-player");
         } else {
+            const leftDivs = document.querySelectorAll(".left-player > div:not(:nth-child(2))");
+            leftDivs.forEach(div => div.classList.add("inactive-board"));
+            const rightDivs = document.querySelectorAll(".right-player > div:not(:nth-child(2))");
+            rightDivs.forEach(div => div.classList.remove("inactive-board"));
             const grid = document.querySelector(".grid-right");
             grid.classList.remove("active-board");
         }
@@ -232,31 +262,44 @@ class DOMHandler {
 
     clearBoardInfo() {
         const infoDiv = document.querySelector(".left-player > .info");
+        const shipsDiv = document.querySelector(".left-player > .ships-count");
         infoDiv.remove();
+        shipsDiv.remove();
         const grid = document.querySelector(".grid-left");
         grid.classList.remove("active-board");
     }
 
     renderWinner(message) {
-        const p = document.querySelector(".turn");
-        p.textContent = message;
-        if (message === "Computer Won!") {
-            const div = document.querySelector(".turn-div");
-            div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-        }
+        // const p = document.querySelector(".turn");
+        // p.textContent = message;
+        setTimeout(() => {
+            if (message === "Computer Won!") {
+                const h2 = document.querySelector(".left-player .info h2");
+                h2.textContent = message;
+                this.enableOverlay("player", true);
+                // const div = document.querySelector(".turn-div");
+                // div.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            } else {
+                const h2 = document.querySelector(".right-player .info h2");
+                h2.textContent = message;
+                this.enableOverlay("computer", true);
+            }
+        }, 350)
     }
 
     showDialog(winner) {
-        const dialog = document.querySelector("dialog");
-        const p = document.querySelector(".box h1");
-        if (winner === "Computer") {
-            p.textContent = "You Lost";
-            p.style.color = "red";
-        } else {
-            p.textContent = "You Won!";
-            p.style.color = "#00bc00bd";
-        }
-        dialog.showModal();
+        setTimeout(() => {
+            const dialog = document.querySelector("dialog");
+            const p = document.querySelector(".box h1");
+            if (winner === "Computer") {
+                p.textContent = "You Lost :(";
+                p.style.color = "red";
+            } else {
+                p.textContent = "You Won 😄";
+                p.style.color = "rgba(0, 188, 0, 1)";
+            }
+            dialog.showModal();
+        }, 1000)
     }
 
     currentShip(className) {
@@ -266,6 +309,29 @@ class DOMHandler {
         cells.forEach((cell) => {
             cell.classList.add("placed-ship");
         });
+    }
+
+    shipIndicator(className) {
+        const previousIndicator = document.querySelector(`.ships .ship${className+1} span`);
+        if(previousIndicator) {
+            previousIndicator.style.display = 'none';
+        }
+        if(className === 3) {
+            const currentIndicator = document.querySelector(`.ships .ship${2} span`);
+            if(currentIndicator) {
+                currentIndicator.style.display = 'block';
+            }
+            return;
+        }
+        const currentIndicator = document.querySelector(`.ships .ship${className} span`);
+        if(currentIndicator) {
+            currentIndicator.style.display = 'block';
+        }
+    }
+
+    removeIndicator() {
+        const indicators = document.querySelectorAll(".ships div[class^='ship'] span");
+        indicators.forEach((indi) => indi.style.display = "none")
     }
 
     clearDOMShips() {
@@ -296,6 +362,8 @@ class DOMHandler {
     hideRightSide() {
         const rightPlayer = document.querySelector(".right-player");
         rightPlayer.classList.remove("right-player-visible");
+        const leftDivs = document.querySelectorAll(".left-player > div");
+        leftDivs.forEach(div => div.classList.remove("inactive-board"));
     }
 
     hideParas() {

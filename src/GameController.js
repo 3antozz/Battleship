@@ -7,6 +7,7 @@ class GameController {
         this.playerTwo = new Player("computer");
         this.currentPlayer = this.playerOne;
         this.cpuQueue = [];
+        this.cpuMissCoords = [];
         this.firstHit = null;
         this.direction = false;
         this.DOMdirection = "horizontal";
@@ -62,6 +63,7 @@ class GameController {
                         this.cpuQueue.push(coords);
                     });
             }
+            this.cpuMissCoords = [row, column];
             return this.playerOne.board.receiveAttack(row, column);
         } else {
             let [row, column] = this.cpuQueue.shift();
@@ -104,6 +106,7 @@ class GameController {
                             this.cpuQueue.push(coords);
                         });
                 }
+                this.cpuMissCoords = [row, column];
                 const result = this.playerOne.board.receiveAttack(row, column);
                 if (result === "Ship has Sunk!") {
                     this.firstHit = null;
@@ -113,6 +116,7 @@ class GameController {
                 }
                 return result;
             } else {
+                this.cpuMissCoords = [row, column];
                 return this.playerOne.board.receiveAttack(row, column);
             }
         }
@@ -200,8 +204,10 @@ class GameController {
         if (this.placementAllowed) {
             this.playerOne.board.placeShip(ship, +cell[0], +cell[1], direction);
             this.DOM.renderGrid(this.playerOne.board.grid);
-            this.DOM.currentShip(`ship${this.currentShipPlacement-this.currentShipIndex}`)
+            this.DOM.animateCell("player", cell[0], cell[1]);
+            this.DOM.currentShip(`ship${this.currentShipPlacement-this.currentShipIndex}`);
             this.currentShipIndex++;
+            this.DOM.shipIndicator(this.currentShipPlacement-this.currentShipIndex);
         } else {
             return;
         }
@@ -231,24 +237,24 @@ class GameController {
             }
             if (!this.playerTwo.board.grid[cell[0]][cell[1]].isShipCell) {
                 this.switchTurn();
-                this.DOM.renderTurnStatus(this.playerTwo.type);
-                this.DOM.enableOverlay("player");
-                this.DOM.renderShotStatus(playerTurn);
                 this.DOM.renderGrid(this.playerTwo.board.grid);
+                this.DOM.animateCell("computer", event.target.dataset.row, event.target.dataset.column);
                 if (!this.gameOver()) {
-                    setTimeout(() => this.computerPlay(), 600);
+                    this.DOM.renderTurnStatus(this.playerTwo.type);
+                    this.DOM.enableOverlay("player");
+                    setTimeout(() => this.computerPlay(), 800);
                 } else {
                     return;
                 }
             } else {
-                if (!this.gameOver()) {
-                    this.DOM.renderShotStatus(playerTurn);
-                }
-                this.DOM.updateShipCount(
+                if(playerTurn === "Ship has Sunk!") {
+                    this.DOM.updateShipCount(
                     this.playerTwo.board.shipsLeftCount(),
                     "computer",
-                );
+                    );
+                }
                 this.DOM.renderGrid(this.playerTwo.board.grid);
+                this.DOM.animateCell("computer", event.target.dataset.row, event.target.dataset.column);
             }
         } else {
             return;
@@ -258,24 +264,9 @@ class GameController {
     computerPlay() {
         this.computerTurnResult = this.cpuAlgo();
         this.DOM.renderTurnStatus(this.playerTwo.type);
-        this.DOM.renderShotStatus(this.computerTurnResult);
         this.DOM.enableOverlay("player");
         this.DOM.renderGrid(this.playerOne.board.grid);
-        if (
-            (!this.gameOver() &&
-                this.computerTurnResult === "Ship has Sunk!") ||
-            (!this.gameOver() && this.computerTurnResult === "Hit!")
-        ) {
-            this.DOM.updateShipCount(
-                this.playerOne.board.shipsLeftCount(),
-                "player",
-            );
-            setTimeout(() => this.computerPlay(), 600);
-        } else {
-            this.DOM.renderTurnStatus(this.playerOne.type);
-            this.DOM.enableOverlay("computer");
-            this.switchTurn();
-        }
+        this.DOM.animateCell("player", this.cpuMissCoords[0], this.cpuMissCoords[1]);
         if (this.gameOver()) {
             this.DOM.renderWinner(`${this.winner} Won!`);
             this.DOM.showDialog(this.winner);
@@ -283,6 +274,25 @@ class GameController {
                 this.playerOne.board.shipsLeftCount(),
                 "player",
             );
+        }
+        if (
+            (!this.gameOver() &&
+                this.computerTurnResult === "Ship has Sunk!") ||
+            (!this.gameOver() && this.computerTurnResult === "Hit!")
+        ) {
+            if(this.computerTurnResult === "Ship has Sunk!") {
+                this.DOM.updateShipCount(
+                this.playerOne.board.shipsLeftCount(),
+                "player",
+                );
+            }
+            setTimeout(() => this.computerPlay(), 800);
+        } else {
+            if(!this.gameOver()) {
+                this.DOM.renderTurnStatus(this.playerOne.type);
+                this.DOM.enableOverlay("computer");
+            }
+            this.switchTurn();
         }
     }
 }
